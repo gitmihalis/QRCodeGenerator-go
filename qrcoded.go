@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
-import "io/ioutil"
+import (
+	"image/png"
+	"bytes"
+	"image"
+	"fmt"
+	"io/ioutil"
+)
 
 func main() {
 	fmt.Println("Hello QR Code")
@@ -11,5 +16,10 @@ func main() {
 }
 
 func GenerateQRCode(code string) []byte {
-	return nil
+	// Create an image and encode it using `png.Encode`.
+	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
+	buf := new(bytes.Buffer)
+	_ = png.Encode(buf, img)
+
+	return buf.Bytes()
 }

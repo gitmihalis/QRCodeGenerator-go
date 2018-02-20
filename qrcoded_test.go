@@ -1,8 +1,12 @@
 package main
 
-import "testing"
+import (
+	"image/png"
+	"bytes"
+	"testing"
+)
 
-// call the Generator with specific data and store result for later
+// Call the Generator with specific data and store result for later
 // inspection.
 func TestGenerateQRCodeReturnValue(t *testing.T) {
 	result := GenerateQRCode("555-5555")
@@ -12,5 +16,18 @@ func TestGenerateQRCodeReturnValue(t *testing.T) {
 	}
 	if len(result) == 0 {
 		t.Errorf("Generated QRCode has no data")
+	}
+}
+
+func TestGenerateQRCodeGeneratesPNG(t *testing.T)  {
+	result := GenerateQRCode("555-2345")
+	buffer := bytes.NewBuffer(result) 
+	// Decode the byte array, discarding any positive results and focus
+	// on the error.
+	_, err := png.Decode(buffer) // `Decode` does not work on byte slices. 
+	// It must satisfy the io.Reader interface  by wrapping in a buffer.
+
+	if err != nil {
+		t.Errorf("Generated QRCode is not a PNG %s", err)
 	}
 }
