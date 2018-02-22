@@ -1,20 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/png"
 	"io"
+	"log"
 	"os"
 )
 
 func main() {
-	fmt.Println("Hello QR Code")
+	log.Println("Hello QR Code")
 
-	file, _ := os.Create("qrcode.png")
+	file, err := os.Create("qrcode.png")
+	if err != nil {
+		log.Fatal(err) // automatically calls os.Exit(1)
+	}
 	defer file.Close()
 
-	GenerateQRCode(file, "555-3556")
+	err = GenerateQRCode(file, "555-3556")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func GenerateQRCode(w io.Writer, code string) error {
