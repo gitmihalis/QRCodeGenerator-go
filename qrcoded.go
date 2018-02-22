@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
-	"image/png"
-	"image"
 	"fmt"
+	"image"
+	"image/png"
 	"io"
+	"os"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 	GenerateQRCode(file, "555-3556")
 }
 
-func GenerateQRCode(w io.Writer, code string) {
+func GenerateQRCode(w io.Writer, code string) error {
 	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
-	_ = png.Encode(w, img)
+	return png.Encode(w, img)
 }
