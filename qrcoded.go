@@ -26,9 +26,11 @@ func main() {
 }
 
 // GenerateQRCode Generates a QR Code from a string
-func GenerateQRCode(w io.Writer, code string) error {
+func GenerateQRCode(w io.Writer, code string, version Version) error {
 	// NRGBA is an in-memory image whose At method returns color.NRGBA values.
 	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
 	// Save the png to file and return any error
 	return png.Encode(w, img)
 }
+
+type Version int8

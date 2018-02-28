@@ -43,3 +43,14 @@ func TestGenerateQRCodePropogatesErrors(t *testing.T) {
 		t.Errorf("Error not propogated correctly, got %v", err)
 	}
 }
+
+func TestVersionDeterminesSize(t *testing.T) {
+	buffer := new(bytes.Buffer)
+	GenerateQRCode(buffer, "555-1111", Version(1))
+
+	img, _ := png.Decode(buffer)
+	if width := img.Bounds().Dx(); width != 21 {
+		t.Errorf("Version 1 expected but got %d", width)
+	}
+
+}
