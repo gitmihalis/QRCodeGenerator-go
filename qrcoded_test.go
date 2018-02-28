@@ -12,7 +12,7 @@ import (
 
 func TestGenerateQRCodeGeneratesPNG(t *testing.T) {
 	buffer := new(bytes.Buffer)
-	GenerateQRCode(buffer, "555-2345")
+	GenerateQRCode(buffer, "555-2345", Version(1))
 
 	if buffer.Len() == 0 {
 		t.Errorf("No QRCode generated")
@@ -37,20 +37,36 @@ func (e *ErrorWriter) Write(b []byte) (int, error) {
 
 func TestGenerateQRCodePropogatesErrors(t *testing.T) {
 	w := new(ErrorWriter)
-	err := GenerateQRCode(w, "555-2334")
+	err := GenerateQRCode(w, "555-2334", Version(1))
 
 	if err == nil || err.Error() != "Expected error" {
 		t.Errorf("Error not propogated correctly, got %v", err)
 	}
 }
 
+// The number of modules in a QR code is determined by its version. For example, a Version 1 QR 
+// code contains 21x21 modules; and the largest specified version, Version 40, contains 177x177 modules.
 func TestVersionDeterminesSize(t *testing.T) {
-	buffer := new(bytes.Buffer)
-	GenerateQRCode(buffer, "555-1111", Version(1))
+	table := []struct {
+		version int
+		expected int
+	} {
+		{1, 21},
+		{2, 25},
+		{6, 41},
+		{7, 45},
+		{14, 73},
+		{40, 177},
+	}
 
-	img, _ := png.Decode(buffer)
-	if width := img.Bounds().Dx(); width != 21 {
-		t.Errorf("Version 1 expected but got %d", width)
+	for _, test := range table {
+		buffer := new(bytes.Buffer)
+		GenerateQRCode(buffer, "555-1111", Version(test.version))
+		img, _ := png.Decode(buffer)
+		if width := img.Bounds().Dx(); width != test.expected {
+			t.Errorf("Version %2d expected %3d but got %3d",
+				test.version, test.expected, width)
+		}
 	}
 
 }

@@ -19,7 +19,7 @@ func main() {
 	// Close file when func is finished running
 	defer file.Close()
 	// Generate the QR code and catch any error
-	err = GenerateQRCode(file, "555-3556")
+	err = GenerateQRCode(file, "555-3556", Version(1))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,10 +27,11 @@ func main() {
 
 // GenerateQRCode Generates a QR Code from a string
 func GenerateQRCode(w io.Writer, code string, version Version) error {
-	// NRGBA is an in-memory image whose At method returns color.NRGBA values.
-	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
-	// Save the png to file and return any error
-	return png.Encode(w, img)
+	size := 4*int(version) + 17
+	img := image.NewNRGBA(image.Rect(0, 0, size, size)) // NRGBA is an in-memory image whose At method returns color.NRGBA values.
+
+
+	return png.Encode(w, img) 	// Save the png to file and return any error
 }
 
 type Version int8
