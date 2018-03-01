@@ -34,4 +34,9 @@ func GenerateQRCode(w io.Writer, code string, version Version) error {
 	return png.Encode(w, img) 	// Save the png to file and return any error
 }
 
+// Version indicate the size of the pattern
 type Version int8
+// PatternSize checks the size calculation
+func (v Version) PatternSize() int {
+	return 4*int(v) + 17
+}
